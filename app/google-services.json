@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "312497245439",
+    "firebase_url": "https://mudrabook-87bd9.firebaseio.com",
+    "project_id": "mudrabook-87bd9",
+    "storage_bucket": "mudrabook-87bd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312497245439:android:ed75c331de2a15ef0390ca",
+        "android_client_info": {
+          "package_name": "com.manuh.mudrabook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "312497245439-b2v3797s899d4t1vvi84l5eki06ljvj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manuh.mudrabook",
+            "certificate_hash": "62554f3d78e456c7b054c4b6ea97f55e2e742424"
+          }
+        },
+        {
+          "client_id": "312497245439-esp0t3ja8vaiudjq21dchnkfqsbptkie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArYH3Pi4jp2rkyK__HRpcdWkjLamc_T8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "312497245439-esp0t3ja8vaiudjq21dchnkfqsbptkie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
