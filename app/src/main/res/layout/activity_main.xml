@@ -8,7 +8,7 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/colorPrimary">
+        android:background="@drawable/bg1">
 
         <ImageView
             android:layout_width="120dp"
@@ -51,16 +51,16 @@
             android:id="@+id/spinnerCountries"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="25" />
+            android:layout_weight="35" />
 
         <EditText
             android:id="@+id/editTextPhone"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="75"
+            android:layout_weight="65"
             android:digits="0123456789"
             android:inputType="phone"
-            android:hint="Enter Your Mobile Number"
+            android:hint="Enter Mobile Number"
             android:maxLength="10" />
 
     </LinearLayout>
