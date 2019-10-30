@@ -30,6 +30,7 @@ RecyclerView rvContacts;
             @Override
             public void onPermissionGranted() {
                 Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                getAllContacts();
             }
 
             @Override
@@ -44,7 +45,7 @@ RecyclerView rvContacts;
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
                 .setPermissions(Manifest.permission.READ_CONTACTS)
                 .check();
-        getAllContacts();
+
     }
 
 
