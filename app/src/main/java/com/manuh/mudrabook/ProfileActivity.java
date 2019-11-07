@@ -164,23 +164,22 @@ if(et_name.getText().toString().length()>0){
 
         });
 
-        findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.buttonLogout).setOnClickListener(v ->{
+
                 FirebaseAuth.getInstance().signOut();
 
                 Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 startActivity(intent);
-            }
+
         });
     }
 
     public void takeScreenShot(View v){
         String mPath = Environment.getExternalStorageDirectory().toString() + "/" + "screen.jpg";
 // create bitmap screen capture
-        Bitmap bitmap;
+
 
         ll_bcard.setDrawingCacheEnabled(true);
 // bitmap = Bitmap.createBitmap(v1.getDrawingCache());
