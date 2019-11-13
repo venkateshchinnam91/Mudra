@@ -1,123 +1,192 @@
 package com.manuh.mudrabook;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
-import java.util.concurrent.TimeUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.POST;
 
 public class VerifyPhoneActivity extends AppCompatActivity {
 
-
+String phonenumber;
     private String verificationId;
-    private FirebaseAuth mAuth;
-    private ProgressBar progressBar;
+    DataServices dataServices;
     private EditText editText;
+    RequestQueue requestQueue;
+    //private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
 
-        mAuth = FirebaseAuth.getInstance();
+        requestQueue = Volley.newRequestQueue(VerifyPhoneActivity.this);
+     //   mAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.progressbar);
         editText = findViewById(R.id.editTextCode);
 
-        String phonenumber = getIntent().getStringExtra("phonenumber");
+        dataServices = APIUtils.getAPIService();
+
+         phonenumber = getIntent().getStringExtra("phonenumber");
         sendVerificationCode(phonenumber);
 
-        findViewById(R.id.buttonSignIn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.buttonSignIn).setOnClickListener(v -> {
+
 
                 String code = editText.getText().toString().trim();
 
-                if (code.isEmpty() || code.length() < 6) {
+                if (code.isEmpty() || code.length() < 4) {
 
                     editText.setError("Enter code...");
                     editText.requestFocus();
                     return;
                 }
                 verifyCode(code);
-            }
+
         });
 
     }
 
-    private void verifyCode(String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithCredential(credential);
-    }
 
-    private void signInWithCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            Intent intent = new Intent(VerifyPhoneActivity.this, HomeActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                            startActivity(intent);
-
-
-                        } else {
-                            Toast.makeText(VerifyPhoneActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
 
     private void sendVerificationCode(String number) {
         progressBar.setVisibility(View.VISIBLE);
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                number,
-                60,
-                TimeUnit.SECONDS,
-                TaskExecutors.MAIN_THREAD,
-                mCallBack
-        );
+
+
+    /*    StringRequest stringRequest =  new StringRequest(Request.Method.POST, "http://125.62.194.124:8080/mudrabook/api/mudrabook/sendOTP", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+            System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("mobileNo", number);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);*/
+
+
+
+
+
+       Call<POST> call1 =  dataServices.getOTP(number);
+        call1.enqueue(new Callback<POST>() {
+            @Override
+            public void onResponse(Call<POST> call, Response<POST> response) {
+               System.out.println( response.body().toString());
+               progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<POST> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+
+
+    }
+    public void verifyCode(String code){
+
+       /* Call<POST> call2 = dataServices.verifyOTP(phonenumber,code);
+
+        call2.enqueue(new Callback<POST>() {
+            @Override
+            public void onResponse(Call<POST> call, Response<POST> response) {
+                System.out.println(response.body().toString());
+                Toast.makeText(VerifyPhoneActivity.this,response.body().toString(),Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject jo =  new JSONObject(response.body().toString());
+
+                    if(jo.getString("message").equalsIgnoreCase("Valid")){
+                        startActivity(new Intent(VerifyPhoneActivity.this,HomeActivity.class));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<POST> call, Throwable t) {
+                    t.printStackTrace();
+                Toast.makeText(VerifyPhoneActivity.this,"ERROR ",Toast.LENGTH_SHORT).show();
+
+            }
+        });*/
+
+        StringRequest stringRequest =  new StringRequest(Request.Method.POST, "http://125.62.194.124:8080/mudrabook/api/mudrabook/validateOTPWithMobile", new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jo =  new JSONObject(response);
+                    if(jo.getString("message").equalsIgnoreCase("Valid")){
+
+
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("MUDRABOOK", 0); // 0 - for private mode
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("number", phonenumber);
+                        editor.putString("login","TRUE");
+
+                        editor.commit(); // commit changes
+                        startActivity(new Intent(VerifyPhoneActivity.this,ProfileActivity.class));
+                    }else{
+                        Toast.makeText(VerifyPhoneActivity.this,"INVALID OTP",Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params =  new HashMap<>();
+                params.put("mobileNo",phonenumber);
+                params.put("otp",code);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
 
     }
 
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            verificationId = s;
-        }
-
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            String code = phoneAuthCredential.getSmsCode();
-            if (code != null) {
-                editText.setText(code);
-                verifyCode(code);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(VerifyPhoneActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
 }

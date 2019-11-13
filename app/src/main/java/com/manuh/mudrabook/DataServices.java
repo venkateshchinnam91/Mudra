@@ -1,8 +1,8 @@
 package com.manuh.mudrabook;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface DataServices {
 
@@ -12,6 +12,10 @@ public interface DataServices {
  /*   @POST("/sendOTP")
     Call<List<>> getOTP();*/
 
- @POST("/sendOTP")
-    Call<POST> getOTP(@Field("mobileNO") String mobileNo);
+
+ @POST("sendOTP")
+ Call<POST> getOTP(@Query("mobileNo") String mobileNo);
+
+ @POST("validateOTPWithMobile")
+ Call<POST> verifyOTP (@Query("mobileNo") String mobileNo, @Query("otp") String otp);
 }

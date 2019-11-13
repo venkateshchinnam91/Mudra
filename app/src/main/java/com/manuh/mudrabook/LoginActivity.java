@@ -8,7 +8,6 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                String phoneNumber = "+" + code + number;
+                String phoneNumber = /*"+" + code + */number;
 
                 Intent intent = new Intent(LoginActivity.this, VerifyPhoneActivity.class);
                 intent.putExtra("phonenumber", phoneNumber);
@@ -48,17 +47,17 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        *//*if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             startActivity(intent);
-        }
-    }
+        }*//*
+    }*/
 
     @Override
     public void onBackPressed() {

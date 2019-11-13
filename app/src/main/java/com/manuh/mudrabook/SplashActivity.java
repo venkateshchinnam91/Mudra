@@ -1,12 +1,12 @@
 package com.manuh.mudrabook;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.appcompat.app.AppCompatActivity;
+
 
 public class SplashActivity extends AppCompatActivity {
     @Override
@@ -17,10 +17,19 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this,LoginActivity.class));
-                finish();
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("MUDRABOOK", 0);
+
+
+
+                if(pref.getString("login","").equalsIgnoreCase("TRUE")) {
+                    startActivity(new Intent(SplashActivity.this, ProfileActivity.class));
+                    finish();
+                }else{
+                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    finish();
+                }
             }
-        },3000);
+        },2000);
 
     }
 }

@@ -5,13 +5,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClientInstance {
 
-    private static final String BASE_URL = "http://125.62.194.124:8080/mudrabook/";
-    private static Retrofit retrofit;
+    private static Retrofit retrofit = null;
 
-    public static Retrofit getRetrofitInstance() {
-        if (retrofit == null) {
-            retrofit = new retrofit2.Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+    public static Retrofit getClient(String baseUrl) {
+        if (retrofit==null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
