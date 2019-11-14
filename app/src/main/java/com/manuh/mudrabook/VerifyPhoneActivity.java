@@ -13,10 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.mukesh.OnOtpCompletionListener;
@@ -97,8 +95,9 @@ ImageView iv_back;
 
                 if (code.isEmpty() || code.length() < 4) {
 
-                    editText.setError("Enter code...");
-                    editText.requestFocus();
+                    Toast.makeText(VerifyPhoneActivity.this,"Enter Valid OTP", Toast.LENGTH_SHORT).show();
+                  /*  editText.setError("Enter code...");
+                    editText.requestFocus();*/
                     return;
                 }
                 verifyCode(code);
@@ -156,18 +155,26 @@ ImageView iv_back;
     }
     public void verifyCode(String code){
 
-       /* Call<POST> call2 = dataServices.verifyOTP(phonenumber,code);
+       /* Call<POST> call2 = dataServices.verifyOTP(phonenumber,str_otp);
 
         call2.enqueue(new Callback<POST>() {
             @Override
             public void onResponse(Call<POST> call, Response<POST> response) {
-                System.out.println(response.body().toString());
+              //  System.out.println(response.body().toString());
                 Toast.makeText(VerifyPhoneActivity.this,response.body().toString(),Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject jo =  new JSONObject(response.body().toString());
-
                     if(jo.getString("message").equalsIgnoreCase("Valid")){
-                        startActivity(new Intent(VerifyPhoneActivity.this,HomeActivity.class));
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("MUDRABOOK", 0); // 0 - for private mode
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("number", phonenumber);
+                        editor.putString("login","TRUE");
+
+                        editor.commit(); // commit changes
+                        startActivity(new Intent(VerifyPhoneActivity.this,ProfileActivity.class));
+                        finish();
+                    }else{
+                        Toast.makeText(VerifyPhoneActivity.this,"INVALID OTP",Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,8 +197,6 @@ ImageView iv_back;
                     JSONObject jo =  new JSONObject(response);
                     if(jo.getString("message").equalsIgnoreCase("Valid")){
 
-
-
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MUDRABOOK", 0); // 0 - for private mode
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("number", phonenumber);
@@ -199,6 +204,7 @@ ImageView iv_back;
 
                         editor.commit(); // commit changes
                         startActivity(new Intent(VerifyPhoneActivity.this,ProfileActivity.class));
+                        finish();
                     }else{
                         Toast.makeText(VerifyPhoneActivity.this,"INVALID OTP",Toast.LENGTH_SHORT).show();
                     }
@@ -207,20 +213,20 @@ ImageView iv_back;
                 }
 
             }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        }, error -> {
+
                 error.printStackTrace();
-            }
+
         }){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params =  new HashMap<>();
                 params.put("mobileNo",phonenumber);
                 params.put("otp",code);
                 return params;
             }
-        };
+        }
+        ;
         requestQueue.add(stringRequest);
 
     }
@@ -228,5 +234,6 @@ ImageView iv_back;
     @Override
     public void onBackPressed() {
         startActivity(new Intent(VerifyPhoneActivity.this,LoginActivity.class));
+        finish();
     }
 }

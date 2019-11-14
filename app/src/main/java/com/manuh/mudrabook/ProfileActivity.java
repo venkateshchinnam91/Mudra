@@ -50,9 +50,8 @@ public class ProfileActivity extends AppCompatActivity {
     LinearLayout ll_bcard;
     Bitmap bitmap;
     Button btn_share;
-    ImageView btn_edit;
+    ImageView btn_edit,btn_save;
     String name, email, address, number, about;
-
     EditText et_name, et_email, et_contact, et_address;
     TextView tv_name, tv_email, tv_contact;
     ImageView iv_back;
@@ -94,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 // number = "9700936228";
         btn_edit = findViewById(R.id.btn_edit);
+        btn_save = findViewById(R.id.btn_save);
 
         iv_back.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
@@ -106,12 +106,21 @@ public class ProfileActivity extends AppCompatActivity {
 
         {
             //btn_edit.s("Save Profile");
-            btn_edit.setImageResource(R.drawable.save);
+         //   btn_edit.setImageResource(R.drawable.save);
+            btn_edit.setVisibility(View.GONE);
+            btn_save.setVisibility(View.VISIBLE);
             et_name.setEnabled(true);
             et_email.setEnabled(true);
             et_address.setEnabled(true);
             et_contact.setEnabled(true);
 
+
+
+        });
+
+        btn_save.setOnClickListener(v->{
+            btn_edit.setVisibility(View.VISIBLE);
+            btn_save.setVisibility(View.GONE);
             if (et_name.getText().toString().length() > 0) {
                 if (et_email.getText().toString().length() > 0) {
                     if (et_contact.getText().toString().length() > 0) {
@@ -128,7 +137,6 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(ProfileActivity.this, "Enter Your Name", Toast.LENGTH_SHORT).show();
             }
-
         });
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -315,6 +323,7 @@ public class ProfileActivity extends AppCompatActivity {
         //  shareIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {email});
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         shareIntent.setType("image/*");
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(shareIntent, "Share card"));
     }
 
@@ -336,7 +345,10 @@ public class ProfileActivity extends AppCompatActivity {
                     if (response.getString("message").equalsIgnoreCase("Saved successfully")) {
                         Toast.makeText(ProfileActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
                        // btn_edit.setText("Edit");
-                        btn_edit.setImageResource(R.drawable.edit);
+                      //  btn_edit.setImageResource(R.drawable.edit);
+
+                        btn_edit.setVisibility(View.VISIBLE);
+                        btn_save.setVisibility(View.GONE);
                         et_name.setEnabled(false);
                         et_address.setEnabled(false);
                         et_email.setEnabled(false);
@@ -362,5 +374,6 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+        finish();
     }
 }
