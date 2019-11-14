@@ -3,9 +3,12 @@ package com.manuh.mudrabook;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +19,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.mukesh.OnOtpCompletionListener;
+import com.mukesh.OtpView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,13 +35,16 @@ import retrofit2.http.POST;
 
 public class VerifyPhoneActivity extends AppCompatActivity {
 
-String phonenumber;
+String phonenumber,str_otp;
     private String verificationId;
     DataServices dataServices;
     private EditText editText;
     RequestQueue requestQueue;
     //private FirebaseAuth mAuth;
     private ProgressBar progressBar;
+    TextView textView1;
+ImageView iv_back;
+    private OtpView otpView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +59,41 @@ String phonenumber;
 
         dataServices = APIUtils.getAPIService();
 
+        textView1 = findViewById(R.id.textView1);
+
+
          phonenumber = getIntent().getStringExtra("phonenumber");
+        textView1.append("  "+phonenumber);
         sendVerificationCode(phonenumber);
 
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(v-> {
+
+            startActivity(new Intent(VerifyPhoneActivity.this,LoginActivity.class));
+
+        });
+
+
+
+        otpView = findViewById(R.id.otp_view);
+        otpView.setOtpCompletionListener(new OnOtpCompletionListener() {
+            @Override
+            public void onOtpCompleted(String otp) {
+                str_otp = otp;
+                // do Stuff
+                Log.d("onOtpCompleted=>", otp);
+            }
+        });
+        /*otpView.setListener(new OnOtpCompletionListener() {
+            @Override public void onOtpCompleted(String otp) {
+                str_otp = otp;
+                // do Stuff
+                Log.d("onOtpCompleted=>", otp);
+            }
+        });*/
         findViewById(R.id.buttonSignIn).setOnClickListener(v -> {
 
-
-                String code = editText.getText().toString().trim();
+                String code = str_otp;//editText.getText().toString().trim();
 
                 if (code.isEmpty() || code.length() < 4) {
 
@@ -74,7 +110,7 @@ String phonenumber;
 
 
     private void sendVerificationCode(String number) {
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
 
     /*    StringRequest stringRequest =  new StringRequest(Request.Method.POST, "http://125.62.194.124:8080/mudrabook/api/mudrabook/sendOTP", new Response.Listener<String>() {
@@ -189,4 +225,8 @@ String phonenumber;
 
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(VerifyPhoneActivity.this,LoginActivity.class));
+    }
 }

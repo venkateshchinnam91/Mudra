@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,20 +49,22 @@ import java.util.Map;
 public class ProfileActivity extends AppCompatActivity {
     LinearLayout ll_bcard;
     Bitmap bitmap;
-    Button btn_share,btn_edit;
-    String name,email,address,number,about;
+    Button btn_share;
+    ImageView btn_edit;
+    String name, email, address, number, about;
 
-    EditText et_name,et_email,et_contact,et_address;
-    TextView tv_name,tv_email,tv_contact;
-
+    EditText et_name, et_email, et_contact, et_address;
+    TextView tv_name, tv_email, tv_contact;
+    ImageView iv_back;
     RequestQueue requestQueue;
+
     public static Bitmap loadBitmapFromView(View v, int width, int height) {
-        Bitmap b = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         v.layout(0, 0, width, height);
 //Get the view’s background
-        Drawable bgDrawable =v.getBackground();
-        if (bgDrawable!=null)
+        Drawable bgDrawable = v.getBackground();
+        if (bgDrawable != null)
 //has background drawable, then draw it on the canvas
             bgDrawable.draw(c);
         else
@@ -80,42 +83,50 @@ public class ProfileActivity extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(ProfileActivity.this);
         et_name = findViewById(R.id.et_name);
-        et_email =findViewById(R.id.et_email);
+        et_email = findViewById(R.id.et_email);
         et_contact = findViewById(R.id.et_contact);
-et_address = findViewById(R.id.et_address);
+        iv_back = findViewById(R.id.iv_back);
+        et_address = findViewById(R.id.et_address);
 
         tv_name = findViewById(R.id.tv_name);
         tv_email = findViewById(R.id.tv_email);
         tv_contact = findViewById(R.id.tv_contact);
 
 // number = "9700936228";
- btn_edit = findViewById(R.id.btn_edit);
+        btn_edit = findViewById(R.id.btn_edit);
+
+        iv_back.setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+        });
+
+
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MUDRABOOK", 0);
-       number =  pref.getString("number","");
-        btn_edit.setOnClickListener(v->
+        number = pref.getString("number", "");
+        btn_edit.setOnClickListener(v ->
 
         {
-            btn_edit.setText("Save Profile");
+            //btn_edit.s("Save Profile");
+            btn_edit.setImageResource(R.drawable.save);
             et_name.setEnabled(true);
             et_email.setEnabled(true);
             et_address.setEnabled(true);
             et_contact.setEnabled(true);
 
-            if(et_name.getText().toString().length()>0){
-                if(et_email.getText().toString().length()>0){
-                    if(et_contact.getText().toString().length()>0){
+            if (et_name.getText().toString().length() > 0) {
+                if (et_email.getText().toString().length() > 0) {
+                    if (et_contact.getText().toString().length() > 0) {
                         name = et_name.getText().toString();
                         email = et_email.getText().toString();
                         address = et_address.getText().toString();
                         saveProfile();
-                    }else{
-                        Toast.makeText(ProfileActivity.this,"Enter Your Contact",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileActivity.this, "Enter Your Contact", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(ProfileActivity.this,"Enter Your Email",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Enter Your Email", Toast.LENGTH_SHORT).show();
                 }
-            }else{
-                Toast.makeText(ProfileActivity.this,"Enter Your Name",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ProfileActivity.this, "Enter Your Name", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -160,7 +171,7 @@ et_address = findViewById(R.id.et_address);
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-tv_contact.setText(s);
+                tv_contact.setText(s);
             }
 
             @Override
@@ -194,20 +205,20 @@ tv_contact.setText(s);
         /*LAMBDA FUNCTION*/
         //btn_share.setOnClickListener(v -> Toast.makeText(ProfileActivity.this,"LAMBDA Function Testing",Toast.LENGTH_SHORT).show());
         btn_share.setOnClickListener(v -> {
-if(et_name.getText().toString().length()>0){
-    if(et_email.getText().toString().length()>0){
-        if(et_contact.getText().toString().length()>0){
-            takeScreenShot(ll_bcard);
-        }else{
-            Toast.makeText(ProfileActivity.this,"Enter Your Contact",Toast.LENGTH_SHORT).show();
-        }
-    }else{
-        Toast.makeText(ProfileActivity.this,"Enter Your Email",Toast.LENGTH_SHORT).show();
-    }
-}else{
-    Toast.makeText(ProfileActivity.this,"Enter Your Name",Toast.LENGTH_SHORT).show();
-}
-           // takeScreenShot(ll_bcard);
+            if (et_name.getText().toString().length() > 0) {
+                if (et_email.getText().toString().length() > 0) {
+                    if (et_contact.getText().toString().length() > 0) {
+                        takeScreenShot(ll_bcard);
+                    } else {
+                        Toast.makeText(ProfileActivity.this, "Enter Your Contact", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Enter Your Email", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(ProfileActivity.this, "Enter Your Name", Toast.LENGTH_SHORT).show();
+            }
+            // takeScreenShot(ll_bcard);
 
         });
 
@@ -222,19 +233,19 @@ if(et_name.getText().toString().length()>0){
 
         });*/
 
-       getProfileData();
+        getProfileData();
     }
 
 
-    public void getProfileData(){
+    public void getProfileData() {
         //getUserByMobileNo
 
-        StringRequest stringRequest =  new StringRequest(Request.Method.POST, "http://125.62.194.124:8080/mudrabook/api/mudrabook/getUserByMobileNo", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://125.62.194.124:8080/mudrabook/api/mudrabook/getUserByMobileNo", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject j = new JSONObject(response);
-                    if(j.getString("message").equalsIgnoreCase("User Information")){
+                    if (j.getString("message").equalsIgnoreCase("User Information")) {
                         JSONObject jdata = j.getJSONObject("data");
                         et_name.setText(jdata.getString("username"));
                         et_address.setText(jdata.getString("address"));
@@ -245,7 +256,7 @@ if(et_name.getText().toString().length()>0){
                         et_address.setEnabled(false);
                         et_contact.setEnabled(false);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -255,18 +266,19 @@ if(et_name.getText().toString().length()>0){
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params =  new HashMap<>();
-                params.put("mobileNo",number);
+                Map<String, String> params = new HashMap<>();
+                params.put("mobileNo", number);
                 return params;
             }
         };
         requestQueue.add(stringRequest);
 
     }
-    public void takeScreenShot(View v){
+
+    public void takeScreenShot(View v) {
         String mPath = Environment.getExternalStorageDirectory().toString() + "/" + "screen.jpg";
 // create bitmap screen capture
 
@@ -307,29 +319,30 @@ if(et_name.getText().toString().length()>0){
     }
 
     public void saveProfile() {
-        JSONObject j  = new JSONObject();
-try {
-    j.put("userEmail", email);
-    j.put("mobileNo", number);
-    j.put("address", address);
-    j.put("username", name);
-}catch (Exception e){
-    e.printStackTrace();
-}
+        JSONObject j = new JSONObject();
+        try {
+            j.put("userEmail", email);
+            j.put("mobileNo", number);
+            j.put("address", address);
+            j.put("username", name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         JsonObjectRequest jo = new JsonObjectRequest(Request.Method.POST, "http://125.62.194.124:8080/mudrabook/api/mudrabook/saveUser", j, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
 
-                    if(response.getString("message").equalsIgnoreCase("Saved successfully")){
-                        Toast.makeText(ProfileActivity.this,"Profile Updated Successfully",Toast.LENGTH_SHORT).show();
-                        btn_edit.setText("Edit");
+                    if (response.getString("message").equalsIgnoreCase("Saved successfully")) {
+                        Toast.makeText(ProfileActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+                       // btn_edit.setText("Edit");
+                        btn_edit.setImageResource(R.drawable.edit);
                         et_name.setEnabled(false);
                         et_address.setEnabled(false);
                         et_email.setEnabled(false);
                         et_contact.setEnabled(false);
-                    }else{
-                        Toast.makeText(ProfileActivity.this,"Profile Update Failed",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileActivity.this, "Profile Update Failed", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -339,7 +352,7 @@ try {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-           error.printStackTrace();
+                error.printStackTrace();
             }
         });
 
@@ -348,6 +361,6 @@ try {
 
     @Override
     public void onBackPressed() {
-
+        startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
     }
 }

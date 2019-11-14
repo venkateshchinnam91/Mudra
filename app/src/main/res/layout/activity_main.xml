@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
    >
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_weight="50"
         android:background="@drawable/bg1">
 
-        <ImageView
-            android:layout_width="120dp"
+        <TextView
+            android:layout_width="150dp"
             android:layout_height="120dp"
+            android:gravity="center"
+            android:text="MUDRABOOK"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
            />
@@ -23,57 +30,76 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:visibility="gone"
         android:layout_below="@id/relativeLayout"
         android:layout_marginTop="-50dp"
         />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_below="@id/imageView"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:layout_marginTop="30dp"
-        android:text="May I ask you phone number?"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorPrimary" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="50"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="15dp">
 
         <Spinner
             android:id="@+id/spinnerCountries"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="35" />
-
-        <EditText
+             />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="#000000"/>
+<com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPhone"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="65"
+            android:background="@null"
             android:digits="0123456789"
             android:inputType="phone"
-            android:hint="Enter Mobile Number"
+            android:hint="Your Mobile Number"
+            android:paddingLeft="10dp"
             android:maxLength="10" />
-
+</com.google.android.material.textfield.TextInputLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="#000000"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="We will send you a one time SMS."
+            android:textSize="10sp"></TextView>
     </LinearLayout>
 
-    <Button
+    <ImageButton
+        android:layout_width="50dp"
         android:id="@+id/buttonContinue"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/linearLayout"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
-        android:text="Continue"
+        android:background="@drawable/round_button"
+        android:src="@drawable/arrow_right"
+
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:textAllCaps="false"
         android:textColor="#ffffff" />
-
-</RelativeLayout>
+</LinearLayout>
+</LinearLayout>

@@ -19,8 +19,6 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("MUDRABOOK", 0);
 
-
-
                 if(pref.getString("login","").equalsIgnoreCase("TRUE")) {
                     startActivity(new Intent(SplashActivity.this, ProfileActivity.class));
                     finish();
